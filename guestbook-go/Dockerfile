@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.10.0
-RUN go get github.com/codegangsta/negroni \
-           github.com/gorilla/mux \
-           github.com/xyproto/simpleredis
+FROM golang:latest
 WORKDIR /app
+RUN go env -w "GOPROXY=direct"
+ADD ./go.mod .
 ADD ./main.go .
+RUN go mod tidy
 RUN CGO_ENABLED=0 GOOS=linux go build -o main .
 
 FROM scratch
